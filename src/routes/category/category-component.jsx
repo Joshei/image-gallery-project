@@ -1,94 +1,34 @@
 import { useContext, useState, useEffect, Fragment } from "react";
-import { CategoryContainer } from "./category-styles";
+import { CategoryContainer, Title } from "./category-styles";
+//import { title } from "./category-styles2";
 import { useParams, useNavigate } from "react-router-dom";
 import Panel from "../../components/panel/panel-component";
 import { after } from "underscore";
 import { NavLink } from "../navigation/navigation-styles";
 import {ART}  from "../../assets/ART_DATA.js"
-
-let storedPanel = [];
-let infoArray = [];
-  
-/*
-{
-    id: 0,
-    name: "name",
-    imageUrl: require("../../assets/1.png"),
-    price: 25,
-    options: [
-      { option: "option1", checked: false },
-      { option: "option2", checked: false },
-      { option: "option3", checked: false },
-      { option: "option4", checked: false },
-    ],
-    category: "art1",
-    amtstars: "none",
-  },
-];
-
-*/
-
-
-
-
-
-//used
-var star1 = "++++";
-// Kept, because it is interesting.
-
-
-export const makeCopyOfProductsWithCustomData = (arrayOfProducts, category) => {
-  console.log("was in function: ", arrayOfProducts);
-  return arrayOfProducts;
-  let index = 0;
-  if (arrayOfProducts) {
-    if (arrayOfProducts.length > 0) {
-      return arrayOfProducts.map((prod) => {
-        index++;
-        return {
-          ...prod,
-          index,
-          category: prod.category || category, // Adding the category as a backup property in our custom objects
-          options: prod.options || [
-            { option: `option1`, checked: false },
-            { option: `option2`, checked: false },
-            { option: `option3`, checked: false },
-            { option: `option4`, checked: false },
-          ],
-        };
-      });
-    } else {
-      return arrayOfProducts;
-    }
-  } else {
-    return arrayOfProducts;
-  }
-};
-let initialProducts = [];
-let artPiecesOfCategoryArray = [];
-
+import './category-styles2.css';
 
 
 export default function Category() {
-  //artPiecesOfCategoryArray = ARTforTestingImageImport.filter(element => element.category === "art2");
 
-  const [loading, setLoading] = useState(true);
-  let [oldArray, setOldArray] = useState(ART);
-  let [hasrun, setHasRun] = useState(false);
-  //setCheckBoxes(true,true,true,true, PanelInfoArray)//
+//!!!!!!!!!!!!!!!!!!!!
+//WHY WOULD THIS USE USESTATE BECAUSE, IT IS SET TO PRODUCTS AND CHANGES NOT DEPENDING ON THE LAST VALUE
+//SET TO PRODUCTS
+let infoArray = [];
+//DIDN'T UEE USESTATE BECAUSE IT ACTS INTERNALLY ONLY IN THIS FUNCTION
+//ISN'T USED BETWEEN RENDERING
+let artPiecesOfCategoryArray = [];
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //let [infoArray, setInfoArray] = useState
   const route = useParams();
-  console.log("cp2: ", { route });
-  //console.log("route: ", route)
   let imageCategoryToShow = route.category;
   let locallyStoredProducts = [];
   let [products, setProducts] = useState(ART);
   artPiecesOfCategoryArray = products.filter(
     (element) => element.category === imageCategoryToShow
   );
-  console.log("route: ", artPiecesOfCategoryArray);
   useEffect(() => {
-    console.log("here!");
-    const productsArrayStored = JSON.parse(localStorage.getItem("products"));
+   const productsArrayStored = JSON.parse(localStorage.getItem("products"));
     const panelsArrayStored = JSON.parse(localStorage.getItem("panel"));
     if (productsArrayStored) {
       setProducts(productsArrayStored);
@@ -98,19 +38,14 @@ export default function Category() {
     }
   }, []);
   const onComplete = after(products.length, () => {
-    setLoading(false);
-    console.log("loaded");
   });
   let [panelInformation, setPanelInformation] = useState([]);
-  console.log("PE2: ", panelInformation);
   useEffect(() => {}, []);
   const [stars, setStars] = useState([]);
   let [showPanel, setShowPanel] = useState(false);
   let count = 0;
   let IsElementSameID = false;
   //amount of stars is what was selected from that interface
-  
-  
   const setPanelInfo = (amtountOfChecks, product) => {
     let panelInformationListLeftElements = [];
     let panelArrayWithDeletedElement = [];
@@ -175,7 +110,7 @@ export default function Category() {
     }
   };
 
-
+  //keep art pieces organized using there id
   function redistributeTheIds(id, panelInformation) {
     let currentid = -1;
     let missingIDIndex = -1;
@@ -235,7 +170,6 @@ export default function Category() {
       setPanelInformation(panelInformationChanged);
       localStorage.setItem(`panel`, JSON.stringify(panelInformationChanged));
     }
-    console.log("here!");
   };
 
 
@@ -250,10 +184,8 @@ export default function Category() {
 
   const computeStars = (e, index, howManyChecked, id, product) => {
     let infoArray = [...products];
-    console.log("1oldarray: ", oldArray);
     let checked = e.target.checked;
     let amtStars = 0;
-    console.log("prod:", products);
     //index of four stars satring at zero
     index = index - 1;
     id = id + 1;
@@ -353,75 +285,78 @@ export default function Category() {
   };
 
 
-  return (
-    <div>
-      <br></br>
-      <br></br>
-      <h1>Would you like to rate these works?</h1>
-      <br></br>
-      <button
-        className="buttonShow"
-        onClick={() => {
-          //
-          setShowPanel((showPanel) => !showPanel);
-        }}
-      >
-        Show Panel
-      </button>
-      <br></br>
-      <br></br>
-      <br></br>
-      <NavLink to="/">Home Page</NavLink>
-      <br></br>
-      <br></br>
-      <br></br>
-      <Fragment>
-        <CategoryContainer>
-          {artPiecesOfCategoryArray.map((product) => {
-            let ID = product.id;
-            return (
-              <div key={product.imageUrl}>
+
+ 
+
+return (
+  <div>
+    <div className = "title">
+    Would you like to rate these works?
+    </div>
+    
+    <button
+      className="buttonShow"
+      onClick={() => {
+        //
+        setShowPanel((showPanel) => !showPanel);
+      }}
+    >
+      Show Panel
+    </button>
+    <br></br>
+    <br></br>
+    <br></br>
+    <NavLink to="/">Home Page</NavLink>
+    <br></br>
+    <br></br>
+    <br></br>
+    <Fragment>
+      <CategoryContainer>
+        {artPiecesOfCategoryArray.map((product) => {
+          let ID = product.id;
+          return (
+            <div key={product.imageUrl}>
+              <div>
+                <h2>{product.name}</h2>
+                <h3>${product.price}.00</h3>
                 <div>
-                  <h2>{product.name}</h2>
-                  <h3>${product.price}.00</h3>
-                  <div>
-                    <img
-                      type="Image"
-                      src={product.imageUrl}
-                      onLoad={onComplete}
-                      onError={onComplete}
-                      alt={product.name}
-                      width={220}
-                    />
-                  </div>
-                </div>
-                <div>
-                  {product.options.map((opt, optIndex) => {
-                    let newOptIndex = optIndex + 1;
-                    return (
-                      <input
-                        key={optIndex}
-                        checked={opt.checked}
-                        type={`checkbox`}
-                        name={newOptIndex}
-                        onChange={(e) =>
-                          computeStars(e, newOptIndex, newOptIndex, ID, product)
-                        }
-                      />
-                    );
-                  })}
-                  {showPanel && (
-                    <Panel
-                      key={panelInformation.id}
-                      category={panelInformation}
-                    />
-                  )}
+                  <img
+                    type="Image"
+                    src={product.imageUrl}
+                    onLoad={onComplete}
+                    onError={onComplete}
+                    alt={product.name}
+                    width={220}
+                  />
                 </div>
               </div>
-            );
-          })}
-        </CategoryContainer>
-      </Fragment>
-    </div>
-  );
+              <div>
+                {product.options.map((opt, optIndex) => {
+                  let newOptIndex = optIndex + 1;
+                  return (
+                    <input
+                      key={optIndex}
+                      checked={opt.checked}
+                      type={`checkbox`}
+                      name={newOptIndex}
+                      onChange={(e) =>
+                        computeStars(e, newOptIndex, newOptIndex, ID, product)
+                      }
+                    />
+                  );
+                })}
+                {showPanel && (
+                  <Panel
+                    key={panelInformation.id}
+                    category={panelInformation}
+                  />
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </CategoryContainer>
+    </Fragment>
+  </div>
+);
 }
